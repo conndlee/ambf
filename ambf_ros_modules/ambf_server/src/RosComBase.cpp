@@ -59,6 +59,9 @@
 #include "ambf_msgs/WorldCmd.h"
 #include "ambf_msgs/WorldState.h"
 
+#include "ambf_msgs/SBCmd.h"
+#include "ambf_msgs/SBFeatures.h"
+
 bool afROSNode::s_initialized;
 ros::NodeHandle* afROSNode::s_nodePtr;
 unsigned int afROSNode::s_registeredInstances = 0;
@@ -95,6 +98,7 @@ template void RosComBase<ambf_msgs::RigidBodyState, ambf_msgs::RigidBodyCmd>::cl
 template void RosComBase<ambf_msgs::SensorState, ambf_msgs::SensorCmd>::cleanUp();
 template void RosComBase<ambf_msgs::VehicleState, ambf_msgs::VehicleCmd>::cleanUp();
 template void RosComBase<ambf_msgs::WorldState, ambf_msgs::WorldCmd>::cleanUp();
+template void RosComBase<ambf_msgs::SBFeatures, ambf_msgs::SBCmd>::cleanUp();
 
 template RosComBase<ambf_msgs::ActuatorState, ambf_msgs::ActuatorCmd>::RosComBase(std::string a_name, std::string a_namespace, int a_freq_min, int a_freq_max, double time_out);
 template RosComBase<ambf_msgs::CameraState, ambf_msgs::CameraCmd>::RosComBase(std::string a_name, std::string a_namespace, int a_freq_min, int a_freq_max, double time_out);
@@ -104,3 +108,4 @@ template RosComBase<ambf_msgs::RigidBodyState, ambf_msgs::RigidBodyCmd>::RosComB
 template RosComBase<ambf_msgs::SensorState, ambf_msgs::SensorCmd>::RosComBase(std::string a_name, std::string a_namespace, int a_freq_min, int a_freq_max, double time_out);
 template RosComBase<ambf_msgs::VehicleState, ambf_msgs::VehicleCmd>::RosComBase(std::string a_name, std::string a_namespace, int a_freq_min, int a_freq_max, double time_out);
 template RosComBase<ambf_msgs::WorldState, ambf_msgs::WorldCmd>::RosComBase(std::string a_name, std::string a_namespace, int a_freq_min, int a_freq_max, double time_out);
+template RosComBase<ambf_msgs::SBFeatures, ambf_msgs::SBCmd>::RosComBase(std::string a_name, std::string a_namespace, int a_freq_min, int a_freq_max, double time_out);

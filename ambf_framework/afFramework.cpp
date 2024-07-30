@@ -4909,6 +4909,7 @@ string afObjectManager::addBaseObject(afBaseObjectPtr a_obj)
         break;
     case afType::SOFT_BODY:
         remaped_name = addSoftBody((afSoftBodyPtr)a_obj);
+        cout << "SOFT_BODY ADDED" << endl;
         break;
     case afType::VEHICLE:
         remaped_name = addVehicle((afVehiclePtr)a_obj);
