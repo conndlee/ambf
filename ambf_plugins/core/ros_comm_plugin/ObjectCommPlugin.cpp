@@ -159,6 +159,15 @@ int afObjectCommunicationPlugin::init(const afBaseObjectPtr a_afObjectPtr, const
         success = true;
     }
         break;
+
+    case afType::SOFT_BODY:
+    {
+        afSoftBodyPtr sbPtr = (afSoftBodyPtr)m_objectPtr;
+        m_softBodyFtCommPtr.reset(new ambf_comm::SoftBodyFt(objName, objNamespace, minFreq, maxFreq, timeOut));
+        m_softBodyFtCommPtr->set_identifier(objQualifiedIdentifier);
+        success = true;
+    }
+        break;
     default:
     {
         cerr << "WARNING! COMMUNICATION TYPE FOR OBJECT NAMED " << objName << " OF TYPE: " << m_objectPtr->getTypeAsStr() << " NOT IMPLEMENTED YET. IGNORING." << endl;
@@ -229,6 +238,12 @@ void afObjectCommunicationPlugin::physicsUpdate(double dt)
         vehicleUpdateState(vehPtr, dt);
     }
         break;
+    case afType::SOFT_BODY:{
+        afSoftBodyPtr afSBPtr = (afSoftBodyPtr)m_objectPtr;
+        softBodyFtFetchCommand(afSBPtr, dt);
+        softBodyFtUpdateState(afSBPtr, dt);
+    }
+        break;
     default:
         break;
     }
@@ -291,6 +306,13 @@ void afObjectCommunicationPlugin::setTimeStamps(const double a_wall_time, const 
         m_vehicleCommPtr->set_wall_time(a_wall_time);
         m_vehicleCommPtr->set_sim_time(a_sim_time);
         m_vehicleCommPtr->set_time_stamp(a_system_time);
+    }
+        break;
+    case afType::SOFT_BODY:
+    {
+        m_softBodyFtCommPtr->set_wall_time(a_wall_time);
+        m_softBodyFtCommPtr->set_sim_time(a_sim_time);
+        m_softBodyFtCommPtr->set_time_stamp(a_system_time);
     }
         break;
     }
@@ -1042,5 +1064,77 @@ void afObjectCommunicationPlugin::volumeUpdateState(afVolumePtr volPtr, double d
 {
 
 }
+
+void afObjectCommunicationPlugin::softBodyFtFetchCommand(afSoftBodyPtr jointPtr, double dt)
+{
+
+}
+
+void afObjectCommunicationPlugin::softBodyFtUpdateState(afSoftBodyPtr afSBPtr, double dt)
+{
+    m_softBodyFtCommPtr->m_writeMtx.lock();
+    setTimeStamps(m_objectPtr->m_afWorld->getWallTime(), m_objectPtr->m_afWorld->getSimulationTime(), m_objectPtr->getCurrentTimeStamp());
+    // cVector3d localPos = afSBPtr->getLocalPos();
+    // m_softBodyFtCommPtr->cur_position(localPos.x(), localPos.y(), localPos.z());
+    // cQuaternion q;
+    // q.fromRotMat(afSBPtr->getLocalRot());
+    // m_softBodyFtCommPtr->cur_orientation(q.x, q.y, q.z, q.w);
+
+    // Since the mass and inertia aren't going to change that often, write them
+    // out intermittently
+    // if (m_write_count % afSBPtr->m_afWorld->m_updateCounterLimit == 0){
+    //     m_softBodyFtCommPtr->set_wheel_count(afSBPtr->getWheelCount());
+    //     m_softBodyFtCommPtr->set_mass(afSBPtr->getMass());
+    //     btVector3 inertia = afSBPtr->getInertia();
+    //     m_softBodyFtCommPtr->set_principal_inertia(inertia.x(), inertia.y(), inertia.z());
+    // }
+    btSoftBody* b_softBody = afSBPtr->m_bulletSoftBody;
+    std::vector<std::vector<float>> vertices;
+    std::vector<float> v = {0,0,0};
+    for (int i=0; i < b_softBody->m_nodes.size(); i++){
+        const btVector3& t = b_softBody->m_nodes[i].m_x;
+        v[0] = static_cast<float>(t.x());
+        v[1] = static_cast<float>(t.y());
+        v[2] = static_cast<float>(t.z());
+        vertices.push_back(v);
+    }
+    m_softBodyFtCommPtr->cur_vertices(vertices);
+
+    std::vector<std::vector<int>> edges;
+    std::vector<int> e = {0,0};
+    for (int i=0; i < b_softBody->m_links.size(); i++){
+        const btSoftBody::Link& link = b_softBody->m_links[i];
+        e[0] = std::distance(&b_softBody->m_nodes[0], link.m_n[0]);
+        e[1] = std::distance(&b_softBody->m_nodes[0], link.m_n[1]);
+        edges.push_back(e);
+    }
+    m_softBodyFtCommPtr->cur_edges(edges);
+
+    std::vector<std::vector<int>> face_vertices;
+    std::vector<std::vector<float>> face_normals;
+    std::vector<int> f_v = {0,0,0};
+    std::vector<float> f_n = {0,0,0};
+    for (int i=0; i < b_softBody->m_faces.size(); i++){
+        const btSoftBody::Face& face = b_softBody->m_faces[i];
+        f_v[0] = std::distance(&b_softBody->m_nodes[0], face.m_n[0]);
+        f_v[1] = std::distance(&b_softBody->m_nodes[0], face.m_n[1]);
+        f_v[2] = std::distance(&b_softBody->m_nodes[0], face.m_n[2]);
+        face_vertices.push_back(f_v);
+
+        const btVector3& normal = b_softBody->m_faces[i].m_normal;
+        f_n[0] = static_cast<float>(normal.x());
+        f_n[1] = static_cast<float>(normal.y());
+        f_n[2] = static_cast<float>(normal.z());
+        face_normals.push_back(f_n);
+    }
+    m_softBodyFtCommPtr->cur_faces(face_vertices, face_normals);
+
+
+    m_softBodyFtCommPtr->m_writeMtx.unlock();
+    m_softBodyFtCommPtr->enableComm();
+    m_write_count++;
+}
+
+
 #endif
 

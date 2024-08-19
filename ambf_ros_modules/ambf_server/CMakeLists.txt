@@ -85,7 +85,10 @@ set (HDR_FILES
     include/${PROJECT_NAME}/Vehicle.h
     include/${PROJECT_NAME}/VehicleRosCom.h
     include/${PROJECT_NAME}/World.h
-    include/${PROJECT_NAME}/WorldRosCom.h)
+    include/${PROJECT_NAME}/WorldRosCom.h
+    include/${PROJECT_NAME}/SoftBodyFt.hpp
+    include/${PROJECT_NAME}/SoftBodyFtRosCom.hpp
+    )
 
 set (SRC_FILES
     src/RosComBase.cpp
@@ -105,6 +108,8 @@ set (SRC_FILES
     src/VehicleRosCom.cpp
     src/World.cpp
     src/WorldRosCom.cpp
+    src/SoftBodyFt.cpp
+    src/SoftBodyFtRosCom.cpp
     )
 
 ## Declare a C++ library

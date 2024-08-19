@@ -224,6 +224,9 @@ void RosComBase<T_state, T_cmd>::run_publishers(){
             }
             // Update and publish state
             copyState();
+            // if(m_name == "CutCloth"){
+            //     std::cout << "publishing state for: " << m_name << "\n";
+            // }
             m_pub.publish(m_StateCopy);
         }
         m_watchDogPtr->m_ratePtr->sleep();

@@ -2992,7 +2992,7 @@ bool afSoftBody::createFromAttribs(afSoftBodyAttributes *a_attribs)
     string remap_idx = afUtils::getNonCollidingIdx(getQualifiedIdentifier(), m_afWorld->getSoftBodyMap());
     setGlobalRemapIdx(remap_idx);
 
-    setPassive(true);
+    // setPassive(true);
 
     loadPlugins(this, a_attribs, &a_attribs->m_pluginAttribs);
 

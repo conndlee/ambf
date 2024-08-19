@@ -215,9 +215,6 @@ void exitHandler(int s);
 void deleteModelAttribsInternalData(afModelAttributes* modelAttribs);
 
 
-// Signed distance field plugin callbacks
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1395,9 +1392,9 @@ void keyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, 
             std::cout << "number of softbodies in world: " << softbodies.size() << "\n";
             for (afSoftBodyPtr softbody : softbodies){
                 std::cout << "model name: " << softbody->getName() << "\n";
-                // std::cout << "model type: " << softbody->getType();
-                std::cout << "object communication: " << softbody->isPassive() << "\n";
-                if(softbody->isPassive()){softbody->setPassive(0);}                
+                std::cout << "model type: " << softbody->getTypeAsStr() << "\n";
+                std::cout << "object communication isPassive: " << softbody->isPassive() << "\n";
+                if(softbody->isPassive()){softbody->setPassive(0); std::cout << "set communication active\n";}                
                 if(softbody->getType() == afType::SOFT_BODY){
                     string m_name = softbody->getName();
                     cout << "Object Name: " << m_name << "\n";
@@ -1405,30 +1402,30 @@ void keyCallback(GLFWwindow* a_window, int a_key, int a_scancode, int a_action, 
 
                     // print vertices
                     std::cout << "Vertices:\n";
-                    for (int i = 0; i < b_softBody->m_nodes.size(); ++i) {
+                    for (int i = 0; i < b_softBody->m_nodes.size(); i++) {
                         const btVector3& t = b_softBody->m_nodes[i].m_x;
                         std::cout << "Vertex " << i 
                                   << ": (" << t.x() << ", " << t.y() << ", " << t.z() << ")\n";
                     }
-                    // print edges
-                    std::cout << "Edges:\n";
-                    for (int i = 0; i < b_softBody->m_links.size(); ++i) {
-                        const btSoftBody::Link& link = b_softBody->m_links[i];
-                        int idx0 = std::distance(&b_softBody->m_nodes[0], link.m_n[0]);
-                        int idx1 = std::distance(&b_softBody->m_nodes[0], link.m_n[1]);
-                        std::cout << "Edge " << i 
-                                  << ": (" << idx0 << ", " << idx1 << ")\n";
-                    }
-                    // print faces
-                    std::cout << "Faces:\n";
-                    for (int i = 0; i < b_softBody->m_faces.size(); ++i) {
-                        const btSoftBody::Face& face = b_softBody->m_faces[i];
-                        int idx0 = std::distance(&b_softBody->m_nodes[0], face.m_n[0]);
-                        int idx1 = std::distance(&b_softBody->m_nodes[0], face.m_n[1]);
-                        int idx2 = std::distance(&b_softBody->m_nodes[0], face.m_n[2]);
-                        std::cout << "Face " << i 
-                                  << ": ("<< idx0 << ", "<< idx1 << ", "<< idx2 << ")\n";
-                    }
+                    // // print edges
+                    // std::cout << "Edges:\n";
+                    // for (int i = 0; i < b_softBody->m_links.size(); i++) {
+                    //     const btSoftBody::Link& link = b_softBody->m_links[i];
+                    //     int idx0 = std::distance(&b_softBody->m_nodes[0], link.m_n[0]);
+                    //     int idx1 = std::distance(&b_softBody->m_nodes[0], link.m_n[1]);
+                    //     std::cout << "Edge " << i 
+                    //               << ": (" << idx0 << ", " << idx1 << ")\n";
+                    // }
+                    // // print faces
+                    // std::cout << "Faces:\n";
+                    // for (int i = 0; i < b_softBody->m_faces.size(); i++) {
+                    //     const btSoftBody::Face& face = b_softBody->m_faces[i];
+                    //     int idx0 = std::distance(&b_softBody->m_nodes[0], face.m_n[0]);
+                    //     int idx1 = std::distance(&b_softBody->m_nodes[0], face.m_n[1]);
+                    //     int idx2 = std::distance(&b_softBody->m_nodes[0], face.m_n[2]);
+                    //     std::cout << "Face " << i 
+                    //               << ": ("<< idx0 << ", "<< idx1 << ", "<< idx2 << ")\n";
+                    // }
                 }else{printf("skippingobject\n");}
             }
             

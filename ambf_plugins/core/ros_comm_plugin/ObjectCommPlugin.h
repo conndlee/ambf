@@ -55,6 +55,8 @@
 #include "ambf_server/Sensor.h"
 #include "ambf_server/Vehicle.h"
 #include "ambf_server/World.h"
+
+#include "ambf_server/SoftBodyFt.hpp"
 #endif
 
 using namespace ambf;
@@ -116,6 +118,9 @@ public:
     void volumeFetchCommand(afVolumePtr, double);
     void volumeUpdateState(afVolumePtr, double);
 
+    void softBodyFtFetchCommand(afSoftBodyPtr, double);
+    void softBodyFtUpdateState(afSoftBodyPtr, double);
+
 public:
 
     //! AMBF ROS COMM
@@ -127,6 +132,7 @@ public:
     std::shared_ptr<ambf_comm::Sensor> m_sensorCommPtr;
     std::shared_ptr<ambf_comm::Vehicle> m_vehicleCommPtr;
     std::shared_ptr<ambf_comm::PointCloudHandler> m_pointCloudCommPtr;
+    std::shared_ptr<ambf_comm::SoftBodyFt> m_softBodyFtCommPtr;
 protected:
     afRigidBodyState m_rbState;
 

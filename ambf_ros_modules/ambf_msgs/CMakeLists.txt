@@ -59,8 +59,11 @@ find_package(catkin REQUIRED COMPONENTS
    ActuatorCmd.msg
    SensorState.msg
    SensorCmd.msg
-   SBCmd.msg
-   SBFeatures.msg
+   SoftBodyFtCmd.msg
+   SoftBodyFtState.msg
+   sb_vertex.msg
+   sb_edge.msg
+   sb_face.msg
    CameraState.msg
    CameraCmd.msg
    LightState.msg

@@ -1,0 +1,4 @@
+Header header
+bool publish_vertices
+bool publish_edges
+bool publish_faces
